@@ -1,1462 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Better Nutrition – Begins With Better Seeds</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>QR Forge — QR Code Generator</title>
+<meta name="description" content="Generate QR codes instantly from any text, name, URL or data. Free, open source."/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --green-dark: #1a4a3a;
-    --green-mid: #2e7d5e;
-    --green-light: #4caf82;
-    --amber: #d4852a;
-    --amber-light: #f5c26b;
-    --cream: #fdf8f0;
-    --white: #ffffff;
-    --text-dark: #1c1c1c;
-    --text-mid: #4a4a4a;
-    --text-light: #7a7a7a;
-    --border: #e8e0d2;
-    --shadow: 0 8px 32px rgba(26,74,58,0.10);
-    --radius: 18px;
-    --radius-sm: 10px;
-    --font-display: 'Playfair Display', serif;
-    --font-body: 'DM Sans', sans-serif;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: var(--font-body);
-    background: var(--cream);
-    color: var(--text-dark);
-    overflow-x: hidden;
-  }
-
-  /* ── ANNOUNCEMENT BAR ── */
-  .announcement {
-    background: var(--green-dark);
-    color: var(--amber-light);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: .04em;
-    padding: 9px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .announcement .promo { display: flex; align-items: center; gap: 8px; }
-  .announcement .promo span.code {
-    background: var(--amber);
-    color: #fff;
-    border-radius: 4px;
-    padding: 2px 8px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    font-size: 12px;
-  }
-  .announcement .links { display: flex; gap: 18px; }
-  .announcement .links a {
-    color: rgba(255,255,255,.75);
-    text-decoration: none;
-    font-size: 12px;
-    transition: color .2s;
-  }
-  .announcement .links a:hover { color: var(--amber-light); }
-
-  /* ── HEADER ── */
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 72px;
-    box-shadow: 0 2px 16px rgba(26,74,58,0.06);
-    transition: box-shadow .3s;
-  }
-  header.scrolled { box-shadow: 0 4px 24px rgba(26,74,58,0.13); }
-
-  .logo {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-    text-decoration: none;
-  }
-  .logo .brand {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--green-dark);
-    letter-spacing: -.01em;
-  }
-  .logo .brand .highlight { color: var(--green-mid); }
-  .logo .tagline {
-    font-size: 9px;
-    font-weight: 500;
-    color: var(--text-light);
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
-
-  nav { display: flex; align-items: center; gap: 6px; }
-  nav a {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-mid);
-    text-decoration: none;
-    padding: 8px 14px;
-    border-radius: 8px;
-    transition: all .2s;
-    position: relative;
-  }
-  nav a:hover { color: var(--green-dark); background: rgba(46,125,94,.07); }
-  nav a.active { color: var(--green-dark); }
-  .nav-dropdown { position: relative; }
-  .nav-dropdown > a::after { content: ' ▾'; font-size: 10px; }
-  .dropdown-menu {
-    display: none;
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    min-width: 180px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    z-index: 200;
-  }
-  .nav-dropdown:hover .dropdown-menu { display: block; }
-  .dropdown-menu a {
-    display: block;
-    padding: 10px 16px;
-    border-radius: 0;
-    font-size: 13px;
-  }
-
-  .header-icons { display: flex; align-items: center; gap: 16px; }
-  .header-icons button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-mid);
-    font-size: 20px;
-    padding: 6px;
-    border-radius: 8px;
-    transition: all .2s;
-    position: relative;
-  }
-  .header-icons button:hover { color: var(--green-dark); background: rgba(46,125,94,.07); }
-  .cart-badge {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    background: var(--amber);
-    color: #fff;
-    font-size: 9px;
-    font-weight: 700;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ── HERO SLIDER ── */
-  .hero {
-    position: relative;
-    overflow: hidden;
-    height: 520px;
-  }
-  .slide {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity .8s ease;
-    display: flex;
-    align-items: center;
-  }
-  .slide.active { opacity: 1; z-index: 2; }
-
-  /* Slide 1 – VS comparison */
-  .slide-1 {
-    background: linear-gradient(120deg, #f5f0e8 0%, #e8f0e4 50%, #d6e8d2 100%);
-  }
-  .slide-1 .slide-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    align-items: center;
-    width: 100%;
-    padding: 0 60px;
-    gap: 24px;
-  }
-  .vs-left, .vs-right {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .vs-title {
-    font-family: var(--font-display);
-    font-size: 30px;
-    font-weight: 700;
-    color: #5a3e20;
-  }
-  .vs-title.green { color: var(--green-dark); }
-  .vs-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-mid);
-  }
-  .vs-item .icon { font-size: 20px; flex-shrink: 0; }
-  .vs-badge {
-    background: var(--white);
-    border: 3px solid var(--green-dark);
-    color: var(--green-dark);
-    font-family: var(--font-display);
-    font-size: 28px;
-    font-weight: 900;
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-    letter-spacing: -.02em;
-  }
-  .vs-center { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-  .slide-cta {
-    display: inline-block;
-    background: var(--green-dark);
-    color: var(--white);
-    font-family: var(--font-body);
-    font-size: 15px;
-    font-weight: 600;
-    padding: 14px 32px;
-    border-radius: 50px;
-    text-decoration: none;
-    text-align: center;
-    transition: all .25s;
-    letter-spacing: .02em;
-  }
-  .slide-cta:hover { background: var(--green-mid); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,74,58,0.22); }
-
-  /* Slide 2 – Hero promo */
-  .slide-2 {
-    background: linear-gradient(135deg, var(--green-dark) 0%, #2e5a45 60%, #3d7a5a 100%);
-  }
-  .slide-2 .slide-content {
-    padding: 0 80px;
-    color: var(--white);
-    max-width: 700px;
-  }
-  .slide-2 .eyebrow {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--amber-light);
-    margin-bottom: 14px;
-  }
-  .slide-2 h1 {
-    font-family: var(--font-display);
-    font-size: 52px;
-    font-weight: 900;
-    line-height: 1.05;
-    margin-bottom: 18px;
-  }
-  .slide-2 h1 em { color: var(--amber-light); font-style: normal; }
-  .slide-2 p {
-    font-size: 16px;
-    color: rgba(255,255,255,.8);
-    line-height: 1.65;
-    max-width: 500px;
-    margin-bottom: 28px;
-  }
-  .slide-2 .cta-row { display: flex; gap: 14px; }
-  .btn-light {
-    display: inline-block;
-    background: var(--white);
-    color: var(--green-dark);
-    font-weight: 700;
-    font-size: 14px;
-    padding: 13px 28px;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: all .25s;
-  }
-  .btn-light:hover { background: var(--amber-light); }
-  .btn-outline {
-    display: inline-block;
-    border: 2px solid rgba(255,255,255,.5);
-    color: var(--white);
-    font-weight: 600;
-    font-size: 14px;
-    padding: 13px 28px;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: all .25s;
-  }
-  .btn-outline:hover { border-color: var(--white); background: rgba(255,255,255,.1); }
-
-  /* Slide 3 */
-  .slide-3 {
-    background: linear-gradient(120deg, #fff8ee 0%, #fdf0d5 100%);
-  }
-  .slide-3 .slide-content {
-    padding: 0 80px;
-    display: flex;
-    align-items: center;
-    gap: 60px;
-    width: 100%;
-  }
-  .slide-3 .text { flex: 1; }
-  .slide-3 .eyebrow {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--amber);
-    margin-bottom: 12px;
-  }
-  .slide-3 h2 {
-    font-family: var(--font-display);
-    font-size: 44px;
-    font-weight: 900;
-    color: var(--green-dark);
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-  .slide-3 p {
-    font-size: 15px;
-    color: var(--text-mid);
-    line-height: 1.7;
-    max-width: 420px;
-    margin-bottom: 24px;
-  }
-  .slide-3 .product-pill {
-    background: var(--green-dark);
-    color: var(--white);
-    font-weight: 700;
-    font-size: 13px;
-    padding: 6px 16px;
-    border-radius: 50px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 20px;
-  }
-  .slide-3 .badge-card {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 32px 40px;
-    box-shadow: var(--shadow);
-    text-align: center;
-    flex: 0 0 260px;
-    border: 2px solid var(--amber-light);
-  }
-  .badge-card .big-num {
-    font-family: var(--font-display);
-    font-size: 72px;
-    font-weight: 900;
-    color: var(--amber);
-    line-height: 1;
-  }
-  .badge-card .label {
-    font-size: 13px;
-    color: var(--text-mid);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .1em;
-    margin-top: 6px;
-  }
-  .badge-card .sub {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--green-dark);
-    margin-top: 8px;
-  }
-
-  /* Slider controls */
-  .slider-dots {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-  }
-  .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: rgba(255,255,255,.4);
-    cursor: pointer;
-    border: none;
-    transition: all .3s;
-  }
-  .dot.active { background: var(--white); width: 28px; border-radius: 5px; }
-  .slider-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255,255,255,.85);
-    border: none;
-    border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    font-size: 18px;
-    cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 12px rgba(0,0,0,.12);
-    transition: all .2s;
-  }
-  .slider-arrow:hover { background: var(--white); box-shadow: 0 4px 20px rgba(0,0,0,.18); }
-  .slider-prev { left: 20px; }
-  .slider-next { right: 20px; }
-
-  /* ── TAGLINE STRIP ── */
-  .tagline-strip {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 40px;
-    text-align: center;
-    font-size: 16px;
-    color: var(--text-mid);
-  }
-  .tagline-strip strong { color: var(--green-dark); }
-
-  /* ── TRUST BADGES ── */
-  .trust-row {
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    gap: 0;
-    background: var(--green-dark);
-    padding: 0;
-    overflow: hidden;
-  }
-  .trust-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 18px 36px;
-    color: var(--white);
-    border-right: 1px solid rgba(255,255,255,.12);
-    flex: 1;
-    justify-content: center;
-  }
-  .trust-item:last-child { border-right: none; }
-  .trust-icon { font-size: 26px; }
-  .trust-label { font-size: 13px; font-weight: 600; line-height: 1.4; }
-  .trust-label small { display: block; font-weight: 400; opacity: .75; font-size: 11px; }
-
-  /* ── SECTION STYLES ── */
-  section { padding: 64px 40px; }
-  .section-header { text-align: center; margin-bottom: 44px; }
-  .section-eyebrow {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: var(--green-mid);
-    margin-bottom: 10px;
-  }
-  .section-title {
-    font-family: var(--font-display);
-    font-size: 36px;
-    font-weight: 900;
-    color: var(--green-dark);
-    line-height: 1.15;
-  }
-  .section-sub {
-    font-size: 15px;
-    color: var(--text-light);
-    margin-top: 10px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* ── CATEGORIES ── */
-  .categories { background: var(--white); }
-  .category-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
-  }
-  .category-card {
-    background: var(--cream);
-    border-radius: var(--radius);
-    padding: 28px 16px 22px;
-    text-align: center;
-    text-decoration: none;
-    color: var(--text-dark);
-    border: 1px solid var(--border);
-    transition: all .25s;
-    cursor: pointer;
-  }
-  .category-card:hover {
-    border-color: var(--green-light);
-    box-shadow: 0 8px 28px rgba(46,125,94,.12);
-    transform: translateY(-4px);
-  }
-  .category-card .cat-icon { font-size: 44px; margin-bottom: 12px; display: block; }
-  .category-card .cat-name { font-size: 13px; font-weight: 600; color: var(--green-dark); }
-  .category-card .cat-count { font-size: 11px; color: var(--text-light); margin-top: 4px; }
-
-  /* ── FEATURED PRODUCTS ── */
-  .featured { background: var(--cream); }
-  .product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-  }
-  .product-card {
-    background: var(--white);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    transition: all .3s;
-    position: relative;
-  }
-  .product-card:hover { box-shadow: 0 12px 40px rgba(26,74,58,.13); transform: translateY(-5px); }
-  .product-img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    background: linear-gradient(135deg, #e8f5ee 0%, #d5ead8 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 80px;
-    position: relative;
-    overflow: hidden;
-  }
-  .product-badge {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: var(--amber);
-    color: var(--white);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: .04em;
-  }
-  .product-badge.green { background: var(--green-mid); }
-  .wishlist-btn {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all .2s;
-    color: var(--text-light);
-  }
-  .wishlist-btn:hover { color: #e05555; border-color: #e05555; }
-  .wishlist-btn.active { color: #e05555; border-color: #e05555; background: #fff0f0; }
-  .product-body { padding: 16px 18px 20px; }
-  .product-name { font-size: 14px; font-weight: 600; color: var(--text-dark); line-height: 1.4; margin-bottom: 6px; }
-  .product-size { font-size: 12px; color: var(--text-light); margin-bottom: 10px; }
-  .product-rating { display: flex; align-items: center; gap: 5px; margin-bottom: 12px; }
-  .stars { color: var(--amber); font-size: 13px; }
-  .rating-count { font-size: 12px; color: var(--text-light); }
-  .product-price-row { display: flex; align-items: center; justify-content: space-between; }
-  .product-price { font-size: 17px; font-weight: 700; color: var(--green-dark); }
-  .product-mrp { font-size: 13px; color: var(--text-light); text-decoration: line-through; }
-  .product-discount { font-size: 12px; font-weight: 700; color: var(--green-mid); }
-  .add-to-cart {
-    background: var(--green-dark);
-    color: var(--white);
-    border: none;
-    border-radius: 8px;
-    padding: 9px 18px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .2s;
-    font-family: var(--font-body);
-  }
-  .add-to-cart:hover { background: var(--green-mid); transform: scale(1.04); }
-
-  /* ── NUTRI HIGHLIGHT ── */
-  .nutri-section {
-    background: linear-gradient(135deg, var(--green-dark) 0%, #2c6b4f 100%);
-    color: var(--white);
-    border-radius: 0;
-    padding: 64px 80px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: center;
-  }
-  .nutri-section h2 {
-    font-family: var(--font-display);
-    font-size: 40px;
-    font-weight: 900;
-    line-height: 1.1;
-    margin-bottom: 20px;
-  }
-  .nutri-section h2 em { color: var(--amber-light); font-style: normal; }
-  .nutri-section p { font-size: 15px; color: rgba(255,255,255,.8); line-height: 1.7; margin-bottom: 28px; }
-  .nutri-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .stat-card {
-    background: rgba(255,255,255,.1);
-    border-radius: 14px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,.15);
-    backdrop-filter: blur(8px);
-  }
-  .stat-num { font-family: var(--font-display); font-size: 36px; font-weight: 900; color: var(--amber-light); }
-  .stat-desc { font-size: 12px; color: rgba(255,255,255,.75); margin-top: 4px; line-height: 1.4; }
-
-  /* ── TESTIMONIALS ── */
-  .testimonials { background: var(--white); }
-  .review-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .review-card {
-    background: var(--cream);
-    border-radius: var(--radius);
-    padding: 28px;
-    border: 1px solid var(--border);
-    transition: box-shadow .25s;
-  }
-  .review-card:hover { box-shadow: var(--shadow); }
-  .review-stars { color: var(--amber); font-size: 16px; margin-bottom: 14px; }
-  .review-text { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 18px; font-style: italic; }
-  .reviewer { display: flex; align-items: center; gap: 12px; }
-  .reviewer-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--green-light), var(--green-dark));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-  }
-  .reviewer-name { font-size: 13px; font-weight: 700; color: var(--text-dark); }
-  .reviewer-loc { font-size: 11px; color: var(--text-light); }
-  .verified { font-size: 10px; color: var(--green-mid); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
-
-  /* ── MARQUEE ── */
-  .marquee-wrap {
-    background: var(--amber);
-    padding: 14px 0;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .marquee-track {
-    display: inline-block;
-    animation: marquee 22s linear infinite;
-  }
-  .marquee-track span {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--white);
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    padding: 0 40px;
-  }
-  .marquee-track span .sep { opacity: .5; margin: 0 8px; }
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--green-dark);
-    color: var(--white);
-    padding: 56px 60px 28px;
-  }
-  .footer-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 48px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid rgba(255,255,255,.1);
-    margin-bottom: 24px;
-  }
-  .footer-brand .brand-name {
-    font-family: var(--font-display);
-    font-size: 26px;
-    font-weight: 900;
-    margin-bottom: 10px;
-    color: var(--amber-light);
-  }
-  .footer-brand p {
-    font-size: 13px;
-    color: rgba(255,255,255,.65);
-    line-height: 1.7;
-    max-width: 280px;
-  }
-  .footer-social { display: flex; gap: 10px; margin-top: 20px; }
-  .social-btn {
-    width: 36px;
-    height: 36px;
-    background: rgba(255,255,255,.1);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    border: none;
-    color: var(--white);
-    transition: background .2s;
-  }
-  .social-btn:hover { background: var(--green-mid); }
-  .footer-col h4 {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: var(--amber-light);
-    margin-bottom: 16px;
-  }
-  .footer-col ul { list-style: none; }
-  .footer-col li { margin-bottom: 10px; }
-  .footer-col a {
-    font-size: 13px;
-    color: rgba(255,255,255,.65);
-    text-decoration: none;
-    transition: color .2s;
-  }
-  .footer-col a:hover { color: var(--white); }
-  .footer-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12px;
-    color: rgba(255,255,255,.45);
-  }
-
-  /* ── NEWSLETTER ── */
-  .newsletter {
-    background: linear-gradient(120deg, #e8f5ee 0%, #d4ecdf 100%);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 48px 40px;
-    text-align: center;
-  }
-  .newsletter h3 {
-    font-family: var(--font-display);
-    font-size: 28px;
-    font-weight: 900;
-    color: var(--green-dark);
-    margin-bottom: 8px;
-  }
-  .newsletter p { font-size: 14px; color: var(--text-mid); margin-bottom: 24px; }
-  .newsletter-form { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; }
-  .newsletter-form input {
-    flex: 1;
-    padding: 13px 18px;
-    border: 1.5px solid var(--border);
-    border-radius: 50px;
-    font-size: 14px;
-    font-family: var(--font-body);
-    background: var(--white);
-    outline: none;
-    transition: border-color .2s;
-  }
-  .newsletter-form input:focus { border-color: var(--green-mid); }
-  .newsletter-form button {
-    background: var(--green-dark);
-    color: var(--white);
-    border: none;
-    border-radius: 50px;
-    padding: 13px 28px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: var(--font-body);
-    transition: all .2s;
-    white-space: nowrap;
-  }
-  .newsletter-form button:hover { background: var(--green-mid); }
-
-  /* ── CART DRAWER ── */
-  .cart-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.4);
-    z-index: 500;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s;
-  }
-  .cart-overlay.open { opacity: 1; pointer-events: all; }
-  .cart-drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 380px;
-    background: var(--white);
-    z-index: 600;
-    transform: translateX(100%);
-    transition: transform .35s cubic-bezier(.4,0,.2,1);
-    display: flex;
-    flex-direction: column;
-    box-shadow: -8px 0 40px rgba(0,0,0,.15);
-  }
-  .cart-drawer.open { transform: translateX(0); }
-  .cart-header {
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .cart-header h3 { font-family: var(--font-display); font-size: 20px; color: var(--green-dark); }
-  .close-cart { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-light); }
-  .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
-  .cart-empty { text-align: center; padding: 60px 20px; color: var(--text-light); }
-  .cart-empty .cart-empty-icon { font-size: 56px; margin-bottom: 14px; }
-  .cart-item {
-    display: flex;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: flex-start;
-  }
-  .cart-item-img {
-    width: 60px;
-    height: 60px;
-    background: var(--cream);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    flex-shrink: 0;
-  }
-  .cart-item-name { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .cart-item-price { font-size: 14px; font-weight: 700; color: var(--green-dark); }
-  .cart-qty { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-  .qty-btn {
-    width: 26px;
-    height: 26px;
-    border: 1.5px solid var(--border);
-    background: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .2s;
-  }
-  .qty-btn:hover { border-color: var(--green-mid); color: var(--green-mid); }
-  .qty-num { font-size: 14px; font-weight: 600; min-width: 20px; text-align: center; }
-  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
-  .cart-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; margin-bottom: 16px; }
-  .checkout-btn {
-    width: 100%;
-    background: var(--green-dark);
-    color: var(--white);
-    border: none;
-    border-radius: 12px;
-    padding: 16px;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    font-family: var(--font-body);
-    transition: background .2s;
-  }
-  .checkout-btn:hover { background: var(--green-mid); }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--green-dark);
-    color: var(--white);
-    padding: 14px 28px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 9999;
-    opacity: 0;
-    transition: all .35s cubic-bezier(.4,0,.2,1);
-    white-space: nowrap;
-    box-shadow: 0 8px 32px rgba(26,74,58,.3);
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-  /* ── SEARCH OVERLAY ── */
-  .search-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.5);
-    z-index: 800;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .3s;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 80px;
-  }
-  .search-overlay.open { opacity: 1; pointer-events: all; }
-  .search-box {
-    background: var(--white);
-    border-radius: 16px;
-    padding: 24px;
-    width: 560px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.2);
-    transform: translateY(-20px);
-    transition: transform .3s;
-  }
-  .search-overlay.open .search-box { transform: translateY(0); }
-  .search-box input {
-    width: 100%;
-    padding: 14px 18px;
-    border: 2px solid var(--green-mid);
-    border-radius: 12px;
-    font-size: 16px;
-    font-family: var(--font-body);
-    outline: none;
-  }
-  .search-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-  .search-tag {
-    background: var(--cream);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all .2s;
-    color: var(--text-mid);
-  }
-  .search-tag:hover { background: var(--green-dark); color: var(--white); border-color: var(--green-dark); }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .fade-up {
-    opacity: 0;
-    animation: fadeUp .6s ease forwards;
-  }
-  .fade-up:nth-child(1) { animation-delay: .05s; }
-  .fade-up:nth-child(2) { animation-delay: .15s; }
-  .fade-up:nth-child(3) { animation-delay: .25s; }
-  .fade-up:nth-child(4) { animation-delay: .35s; }
-  .fade-up:nth-child(5) { animation-delay: .45s; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;
+  --border:#2a2a2a;--text:#f0f0f0;--muted:#555;
+  --accent:#00ff88;--accent2:#00ccff;--radius:12px;
+}
+body{
+  font-family:'Space Mono',monospace;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px 16px;position:relative;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;
+  background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;z-index:0;
+}
+.wrap{position:relative;z-index:1;width:100%;max-width:480px;display:flex;flex-direction:column;gap:20px;}
+.header{text-align:center;}
+.title{
+  font-family:'Archivo Black',sans-serif;
+  font-size:clamp(2rem,7vw,3rem);letter-spacing:-1px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;
+}
+.sub{font-size:0.68rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.lbl{font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.inp{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:12px 14px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.88rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
+}
+.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,136,0.1);}
+.inp::placeholder{color:var(--muted);}
+.inp.shake{animation:shake 0.3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.color-wrap{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;cursor:pointer;transition:border-color 0.2s;
+}
+.color-wrap:hover{border-color:var(--accent);}
+.swatch{width:26px;height:26px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.12);flex-shrink:0;transition:transform 0.2s;}
+.color-wrap:hover .swatch{transform:scale(1.1);}
+input[type="color"]{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
+.hex-val{font-size:0.72rem;color:var(--muted);letter-spacing:1px;}
+.sel{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:11px 36px 11px 12px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.78rem;outline:none;cursor:pointer;width:100%;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;background-size:16px;
+  transition:border-color 0.2s;
+}
+.sel:focus{border-color:var(--accent);}
+.size-row{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;}
+.size-num{font-size:0.75rem;color:var(--accent);min-width:36px;text-align:right;font-weight:700;}
+input[type="range"]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:99px;outline:none;cursor:pointer;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;transition:transform 0.2s;}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3);}
+.gen-btn{
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#000;border:none;border-radius:8px;padding:14px;
+  font-family:'Archivo Black',sans-serif;font-size:0.92rem;letter-spacing:1px;
+  cursor:pointer;text-transform:uppercase;transition:transform 0.2s,box-shadow 0.2s,opacity 0.2s;
+}
+.gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,0.3);}
+.gen-btn:active{transform:translateY(0);}
+.gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.qr-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:24px 20px;display:none;flex-direction:column;align-items:center;gap:16px;
+  animation:fadeUp 0.4s ease;
+}
+.qr-card.show{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.qr-tag{font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
+#qrCanvas{border-radius:10px;display:block;max-width:100%;height:auto;image-rendering:pixelated;}
+.qr-info{font-size:0.7rem;color:var(--muted);text-align:center;word-break:break-all;max-width:340px;line-height:1.7;}
+.action-row{display:flex;gap:8px;width:100%;flex-wrap:wrap;}
+.act-btn{
+  flex:1;min-width:90px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:10px 8px;color:var(--text);
+  font-family:'Space Mono',monospace;font-size:0.68rem;cursor:pointer;
+  transition:all 0.2s;white-space:nowrap;
+}
+.act-btn:hover{border-color:var(--accent);color:var(--accent);}
+.act-btn.ok{border-color:var(--accent);color:var(--accent);}
+.act-btn.fail{border-color:#ff6b35;color:#ff6b35;}
+.empty{text-align:center;padding:28px 0 4px;color:var(--muted);font-size:0.75rem;line-height:2;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.empty-icon{font-size:2.8rem;opacity:0.2;}
+.footer{text-align:center;font-size:0.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;}
+.footer a{color:var(--muted);text-decoration:none;}
+.footer a:hover{color:var(--accent);}
+@media(max-width:400px){.two-col{grid-template-columns:1fr;}.action-row{flex-direction:column;}.act-btn{min-width:unset;}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<!-- Announcement Bar -->
-<div class="announcement">
-  <div class="promo">
-    🌾 25% off on orders above ₹999/ | Code: <span class="code">SURPRISE</span> &nbsp;· &nbsp;🚚 Free delivery on orders above ₹499
+  <div class="header">
+    <div class="title">QR FORGE</div>
+    <div class="sub">instant qr code generator</div>
   </div>
-  <div class="links">
-    <a href="#">Nutritional Transparency</a>
-    <a href="#">Nutri Scan</a>
-    <a href="#">Track Order</a>
-    <a href="#">FAQ</a>
+
+  <div class="card">
+    <div class="field">
+      <div class="lbl">Text / Name / URL / Anything</div>
+      <input class="inp" id="qrInput" type="text" placeholder="e.g. John Doe, https://github.com, Wi-Fi…" autocomplete="off" spellcheck="false"/>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <div class="lbl">QR Color</div>
+        <div class="color-wrap" id="fgWrap">
+          <div class="swatch" id="fgSwatch"></div>
+          <span class="hex-val" id="fgHex">#00FF88</span>
+          <input type="color" id="fgPicker" value="#00ff88"/>
+        </div>
+      </div>
+      <div class="field">
+        <div class="lbl">Background</div>
+        <div class="color-wrap" id="bgWrap">
+          <div class="swatch" id="bgSwatch"></div>
+          <span class="hex-val" id="bgHex">#0A0A0A</span>
+          <input type="color" id="bgPicker" value="#0a0a0a"/>
+        </div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <div class="lbl">Error Correction</div>
+        <select class="sel" id="ecLevel">
+          <option value="L">L — 7%</option>
+          <option value="M" selected>M — 15%</option>
+          <option value="Q">Q — 25%</option>
+          <option value="H">H — 30%</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="lbl">Size — <span id="sizeDisp">280</span>px</div>
+        <div class="size-row">
+          <input type="range" id="sizeSlider" min="150" max="600" value="280" step="10"/>
+          <span class="size-num" id="sizeNum">280</span>
+        </div>
+      </div>
+    </div>
+    <button class="gen-btn" id="genBtn">⬡ Generate QR Code</button>
   </div>
+
+  <div class="qr-card" id="qrCard">
+    <div class="qr-tag">▸ your qr code</div>
+    <canvas id="qrCanvas"></canvas>
+    <div class="qr-info" id="qrInfo"></div>
+    <div class="action-row">
+      <button class="act-btn" id="dlPng">⬇ PNG</button>
+      <button class="act-btn" id="dlSvg">⬇ SVG</button>
+      <button class="act-btn" id="cpImg">⎘ Copy</button>
+      <button class="act-btn" id="shareBtn">↗ Share</button>
+    </div>
+  </div>
+
+  <div class="empty" id="emptyState">
+    <div class="empty-icon">▦</div>
+    <div>Enter any text above and tap Generate<br/>to create your QR code instantly</div>
+  </div>
+
+  <div class="footer">qr forge &nbsp;·&nbsp; open source &nbsp;·&nbsp; <a href="https://github.com" target="_blank" rel="noopener">github</a></div>
 </div>
 
-<!-- Header -->
-<header id="header">
-  <a class="logo" href="#">
-    <span class="brand">BETT<span class="highlight">E</span>R<br>NUTRITION</span>
-    <span class="tagline">Begins With Better Seeds</span>
-  </a>
-
-  <nav>
-    <div class="nav-dropdown">
-      <a href="#">Shop All</a>
-      <div class="dropdown-menu">
-        <a href="#">Atta & Flour</a>
-        <a href="#">Dalia & Porridge</a>
-        <a href="#">Rice & Grains</a>
-        <a href="#">Oils & Seeds</a>
-        <a href="#">Combos</a>
-      </div>
-    </div>
-    <a href="#">About Us</a>
-    <a href="#">Combo</a>
-    <a href="#">Recipe</a>
-    <a href="#">Greenday</a>
-    <div class="nav-dropdown">
-      <a href="#">Our Journey</a>
-      <div class="dropdown-menu">
-        <a href="#">Our Mission</a>
-        <a href="#">Farmers</a>
-        <a href="#">Certifications</a>
-      </div>
-    </div>
-    <a href="#">IAHH</a>
-  </nav>
-
-  <div class="header-icons">
-    <button onclick="openSearch()" title="Search">🔍</button>
-    <button title="Account">👤</button>
-    <button onclick="toggleCart()" title="Cart" style="position:relative">
-      🛒
-      <span class="cart-badge" id="cartCount">0</span>
-    </button>
-  </div>
-</header>
-
-<!-- Hero Slider -->
-<div class="hero" id="heroSlider">
-
-  <!-- Slide 1 -->
-  <div class="slide slide-1 active">
-    <div class="slide-content">
-      <div class="vs-left">
-        <div class="vs-title">Fortified Atta</div>
-        <div class="vs-item"><span class="icon">🧪</span><span>Nutrients added artificially</span></div>
-        <div class="vs-item"><span class="icon">🔥</span><span>Loss during cooking</span></div>
-        <div class="vs-item"><span class="icon">🏭</span><span>Lab processed</span></div>
-        <div class="vs-item"><span class="icon">📉</span><span>Basic nutrition</span></div>
-      </div>
-      <div class="vs-center">
-        <div class="vs-badge">VS</div>
-        <a href="#" class="slide-cta">Shop Biofortified Atta</a>
-      </div>
-      <div class="vs-right">
-        <div class="vs-title green">Biofortified Atta</div>
-        <div class="vs-item"><span class="icon">🌾</span><span>Nutrients grown naturally</span></div>
-        <div class="vs-item"><span class="icon">✅</span><span>Retained after cooking</span></div>
-        <div class="vs-item"><span class="icon">🌿</span><span>Natural process</span></div>
-        <div class="vs-item"><span class="icon">💪</span><span>Better nutrition</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Slide 2 -->
-  <div class="slide slide-2">
-    <div class="slide-content">
-      <div class="eyebrow">India's First Biofortified Brand</div>
-      <h1>Nutrition that <em>Grows</em><br>Inside the Grain</h1>
-      <p>We partner with farmers to grow seeds that are naturally rich in zinc, iron and protein — no artificial additives, no lab processing.</p>
-      <div class="cta-row">
-        <a href="#" class="btn-light">Shop Now</a>
-        <a href="#" class="btn-outline">Our Story</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Slide 3 -->
-  <div class="slide slide-3">
-    <div class="slide-content">
-      <div class="text">
-        <div class="eyebrow">New Launch</div>
-        <div class="product-pill">🌾 Broken Wheat Daliya</div>
-        <h2>2X Zinc & Iron<br>Naturally</h2>
-        <p>Our biofortified Daliya is packed with nutrients that stay intact after cooking — giving your family the nourishment they deserve.</p>
-        <a href="#" class="slide-cta" style="display:inline-block">Shop Daliya ₹149</a>
-      </div>
-      <div class="badge-card">
-        <div class="big-num">2X</div>
-        <div class="label">Zinc & Iron</div>
-        <div class="sub">vs Regular Daliya</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Slider controls -->
-  <button class="slider-arrow slider-prev" onclick="changeSlide(-1)">‹</button>
-  <button class="slider-arrow slider-next" onclick="changeSlide(1)">›</button>
-  <div class="slider-dots" id="sliderDots"></div>
-</div>
-
-<!-- Tagline strip -->
-<div class="tagline-strip">
-  India's <strong>first bio-fortified</strong> food brand: growing nutrition inside the grain through better seeds and soil
-</div>
-
-<!-- Trust Row -->
-<div class="trust-row">
-  <div class="trust-item"><span class="trust-icon">🌾</span><div class="trust-label">Biofortified Seeds<small>Naturally nutrient-rich</small></div></div>
-  <div class="trust-item"><span class="trust-icon">🧑‍🌾</span><div class="trust-label">Farmer Partners<small>Direct from field to fork</small></div></div>
-  <div class="trust-item"><span class="trust-icon">🔬</span><div class="trust-label">Lab Certified<small>FSSAI approved quality</small></div></div>
-  <div class="trust-item"><span class="trust-icon">♻️</span><div class="trust-label">Eco Packaging<small>Sustainable & recyclable</small></div></div>
-  <div class="trust-item"><span class="trust-icon">🚚</span><div class="trust-label">Free Delivery<small>On orders above ₹499</small></div></div>
-</div>
-
-<!-- Categories -->
-<section class="categories">
-  <div class="section-header">
-    <div class="section-eyebrow">Browse By Category</div>
-    <div class="section-title">Shop Our Range</div>
-  </div>
-  <div class="category-grid">
-    <a class="category-card fade-up" href="#"><span class="cat-icon">🌾</span><div class="cat-name">Atta & Flour</div><div class="cat-count">12 products</div></a>
-    <a class="category-card fade-up" href="#"><span class="cat-icon">🥣</span><div class="cat-name">Dalia & Porridge</div><div class="cat-count">8 products</div></a>
-    <a class="category-card fade-up" href="#"><span class="cat-icon">🍚</span><div class="cat-name">Rice & Grains</div><div class="cat-count">6 products</div></a>
-    <a class="category-card fade-up" href="#"><span class="cat-icon">🫒</span><div class="cat-name">Oils & Seeds</div><div class="cat-count">5 products</div></a>
-    <a class="category-card fade-up" href="#"><span class="cat-icon">🎁</span><div class="cat-name">Gift Combos</div><div class="cat-count">4 products</div></a>
-  </div>
-</section>
-
-<!-- Marquee -->
-<div class="marquee-wrap">
-  <div class="marquee-track" id="marqueeTrack">
-    <span>Biofortified <span class="sep">✦</span> Natural Nutrients <span class="sep">✦</span> FSSAI Certified <span class="sep">✦</span> Farm to Table <span class="sep">✦</span> Zero Artificial Additives <span class="sep">✦</span> High Zinc <span class="sep">✦</span> High Iron <span class="sep">✦</span> Better Seeds <span class="sep">✦</span> Better Health <span class="sep">✦</span></span>
-    <span>Biofortified <span class="sep">✦</span> Natural Nutrients <span class="sep">✦</span> FSSAI Certified <span class="sep">✦</span> Farm to Table <span class="sep">✦</span> Zero Artificial Additives <span class="sep">✦</span> High Zinc <span class="sep">✦</span> High Iron <span class="sep">✦</span> Better Seeds <span class="sep">✦</span> Better Health <span class="sep">✦</span></span>
-  </div>
-</div>
-
-<!-- Featured Products -->
-<section class="featured">
-  <div class="section-header">
-    <div class="section-eyebrow">Best Sellers</div>
-    <div class="section-title">Featured Products</div>
-    <div class="section-sub">All our products are grown using biofortified seeds for maximum natural nutrition.</div>
-  </div>
-  <div class="product-grid" id="productGrid"></div>
-</section>
-
-<!-- Nutri Highlight -->
-<section style="padding:0">
-  <div class="nutri-section">
-    <div>
-      <h2>Why <em>Biofortification</em> Matters for Your Family</h2>
-      <p>Unlike conventional fortification where nutrients are added in a lab and lost during cooking, biofortification grows the nutrition directly into the grain — so it stays with every bite.</p>
-      <a href="#" class="btn-light" style="display:inline-block">Learn Our Science</a>
-    </div>
-    <div class="nutri-stats">
-      <div class="stat-card"><div class="stat-num">2X</div><div class="stat-desc">More zinc than regular wheat</div></div>
-      <div class="stat-card"><div class="stat-num">40%</div><div class="stat-desc">Higher iron retention after cooking</div></div>
-      <div class="stat-card"><div class="stat-num">500+</div><div class="stat-desc">Farmer families partnered</div></div>
-      <div class="stat-card"><div class="stat-num">1L+</div><div class="stat-desc">Happy customers across India</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- Testimonials -->
-<section class="testimonials">
-  <div class="section-header">
-    <div class="section-eyebrow">Customer Love</div>
-    <div class="section-title">What Families Are Saying</div>
-  </div>
-  <div class="review-grid">
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"My kids actually eat the rotis now! And knowing they're getting twice the nutrition makes it even better. Switched from regular atta completely."</div>
-      <div class="reviewer">
-        <div class="reviewer-avatar">P</div>
-        <div><div class="reviewer-name">Priya Sharma</div><div class="reviewer-loc">Bengaluru</div><div class="verified">✔ Verified Purchase</div></div>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"As a nutritionist I recommend Better Nutrition to all my clients. The concept of biofortification is the future of food. Excellent product quality."</div>
-      <div class="reviewer">
-        <div class="reviewer-avatar">R</div>
-        <div><div class="reviewer-name">Dr. Rekha Menon</div><div class="reviewer-loc">Chennai</div><div class="verified">✔ Verified Purchase</div></div>
-      </div>
-    </div>
-    <div class="review-card">
-      <div class="review-stars">★★★★★</div>
-      <div class="review-text">"The daliya is absolutely delicious and knowing it has 2X iron naturally — not added artificially — gives me real peace of mind for my family."</div>
-      <div class="reviewer">
-        <div class="reviewer-avatar">A</div>
-        <div><div class="reviewer-name">Anita Gupta</div><div class="reviewer-loc">Delhi</div><div class="verified">✔ Verified Purchase</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Newsletter -->
-<div class="newsletter">
-  <h3>🌿 Get Nutrition Tips & Offers</h3>
-  <p>Join 50,000+ families who receive our weekly health tips, recipes and exclusive offers.</p>
-  <div class="newsletter-form">
-    <input type="email" placeholder="Enter your email address" id="emailInput">
-    <button onclick="subscribeNewsletter()">Subscribe Free</button>
-  </div>
-</div>
-
-<!-- Footer -->
-<footer>
-  <div class="footer-grid">
-    <div class="footer-brand">
-      <div class="brand-name">BETTER NUTRITION</div>
-      <p>India's first biofortified food brand. We grow nutrition inside the grain through better seeds and better soil — naturally, sustainably.</p>
-      <div class="footer-social">
-        <button class="social-btn">f</button>
-        <button class="social-btn">𝕏</button>
-        <button class="social-btn">▶</button>
-        <button class="social-btn">📷</button>
-      </div>
-    </div>
-    <div class="footer-col">
-      <h4>Shop</h4>
-      <ul>
-        <li><a href="#">Atta & Flour</a></li>
-        <li><a href="#">Dalia & Porridge</a></li>
-        <li><a href="#">Rice & Grains</a></li>
-        <li><a href="#">Oils & Seeds</a></li>
-        <li><a href="#">Combo Packs</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Company</h4>
-      <ul>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Our Journey</a></li>
-        <li><a href="#">Farmers</a></li>
-        <li><a href="#">Certifications</a></li>
-        <li><a href="#">Blog</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h4>Support</h4>
-      <ul>
-        <li><a href="#">Track Order</a></li>
-        <li><a href="#">Returns & Refunds</a></li>
-        <li><a href="#">FAQ</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Nutri Scan</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2026 Better Nutrition. All rights reserved.</span>
-    <span>Privacy Policy · Terms of Service · Shipping Policy</span>
-  </div>
-</footer>
-
-<!-- Cart Drawer -->
-<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-<div class="cart-drawer" id="cartDrawer">
-  <div class="cart-header">
-    <h3>🛒 Your Cart</h3>
-    <button class="close-cart" onclick="toggleCart()">✕</button>
-  </div>
-  <div class="cart-items" id="cartItems">
-    <div class="cart-empty">
-      <div class="cart-empty-icon">🛒</div>
-      <div style="font-weight:600;color:var(--text-dark);margin-bottom:6px">Your cart is empty</div>
-      <div style="font-size:13px">Add some nutritious goodies!</div>
-    </div>
-  </div>
-  <div class="cart-footer" id="cartFooter" style="display:none">
-    <div class="cart-total"><span>Total</span><span id="cartTotal">₹0</span></div>
-    <button class="checkout-btn">Proceed to Checkout →</button>
-  </div>
-</div>
-
-<!-- Search Overlay -->
-<div class="search-overlay" id="searchOverlay" onclick="closeSearch(event)">
-  <div class="search-box">
-    <input type="text" id="searchInput" placeholder="Search for atta, daliya, rice...">
-    <div class="search-tags">
-      <span class="search-tag">Biofortified Atta</span>
-      <span class="search-tag">Broken Wheat Daliya</span>
-      <span class="search-tag">Zinc Rich</span>
-      <span class="search-tag">Combo Packs</span>
-      <span class="search-tag">Iron Rich</span>
-    </div>
-  </div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ── PRODUCTS DATA ──
-const products = [
-  { id:1, name:'Biofortified Wheat Atta', size:'5 kg', price:349, mrp:449, discount:'22% off', emoji:'🌾', badge:'Best Seller', badgeClass:'green' },
-  { id:2, name:'Broken Wheat Daliya', size:'500 g', price:149, mrp:199, discount:'25% off', emoji:'🥣', badge:'New', badgeClass:'' },
-  { id:3, name:'Biofortified Brown Rice', size:'1 kg', price:229, mrp:299, discount:'23% off', emoji:'🍚', badge:'', badgeClass:'' },
-  { id:4, name:'Greenday Combo Pack', size:'Assorted', price:599, mrp:799, discount:'25% off', emoji:'🎁', badge:'Combo', badgeClass:'' },
-];
+"use strict";
+const qrInput=document.getElementById("qrInput"),genBtn=document.getElementById("genBtn"),qrCard=document.getElementById("qrCard"),qrCanvas=document.getElementById("qrCanvas"),qrInfo=document.getElementById("qrInfo"),emptyState=document.getElementById("emptyState");
+const fgPicker=document.getElementById("fgPicker"),bgPicker=document.getElementById("bgPicker"),fgSwatch=document.getElementById("fgSwatch"),bgSwatch=document.getElementById("bgSwatch"),fgHex=document.getElementById("fgHex"),bgHex=document.getElementById("bgHex");
+const fgWrap=document.getElementById("fgWrap"),bgWrap=document.getElementById("bgWrap"),ecLevel=document.getElementById("ecLevel"),sizeSlider=document.getElementById("sizeSlider"),sizeDisp=document.getElementById("sizeDisp"),sizeNum=document.getElementById("sizeNum");
+const dlPng=document.getElementById("dlPng"),dlSvg=document.getElementById("dlSvg"),cpImg=document.getElementById("cpImg"),shareBtn=document.getElementById("shareBtn");
+let lastText="";
 
-const cart = {};
-
-function renderProducts() {
-  const grid = document.getElementById('productGrid');
-  grid.innerHTML = products.map(p => `
-    <div class="product-card fade-up">
-      <div class="product-img">
-        <span style="line-height:1">${p.emoji}</span>
-        ${p.badge ? `<span class="product-badge ${p.badgeClass}">${p.badge}</span>` : ''}
-        <button class="wishlist-btn" id="wish-${p.id}" onclick="toggleWish(${p.id})">♡</button>
-      </div>
-      <div class="product-body">
-        <div class="product-name">${p.name}</div>
-        <div class="product-size">${p.size}</div>
-        <div class="product-rating">
-          <span class="stars">★★★★★</span>
-          <span class="rating-count">(4.8)</span>
-        </div>
-        <div class="product-price-row">
-          <div>
-            <div class="product-price">₹${p.price}</div>
-            <div>
-              <span class="product-mrp">₹${p.mrp}</span>
-              <span class="product-discount"> ${p.discount}</span>
-            </div>
-          </div>
-          <button class="add-to-cart" onclick="addToCart(${p.id})">+ Add</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
+function syncColor(w){
+  const p=w==="fg"?fgPicker:bgPicker,s=w==="fg"?fgSwatch:bgSwatch,h=w==="fg"?fgHex:bgHex;
+  s.style.background=p.value;h.textContent=p.value.toUpperCase();
 }
+syncColor("fg");syncColor("bg");
+fgWrap.addEventListener("click",()=>fgPicker.click());
+bgWrap.addEventListener("click",()=>bgPicker.click());
+fgPicker.addEventListener("input",()=>syncColor("fg"));
+bgPicker.addEventListener("input",()=>syncColor("bg"));
+sizeSlider.addEventListener("input",()=>{sizeDisp.textContent=sizeSlider.value;sizeNum.textContent=sizeSlider.value;});
+qrInput.addEventListener("keydown",e=>{if(e.key==="Enter")generateQR();});
+genBtn.addEventListener("click",generateQR);
 
-function toggleWish(id) {
-  const btn = document.getElementById('wish-' + id);
-  btn.classList.toggle('active');
-  btn.textContent = btn.classList.contains('active') ? '♥' : '♡';
-}
-
-function addToCart(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
-  cart[id] = cart[id] ? { ...cart[id], qty: cart[id].qty + 1 } : { ...p, qty: 1 };
-  updateCartUI();
-  showToast(`✅ ${p.name} added to cart!`);
-}
-
-function updateCartUI() {
-  const count = Object.values(cart).reduce((a, x) => a + x.qty, 0);
-  const total = Object.values(cart).reduce((a, x) => a + x.price * x.qty, 0);
-  document.getElementById('cartCount').textContent = count;
-  const itemsEl = document.getElementById('cartItems');
-  const footerEl = document.getElementById('cartFooter');
-  if (count === 0) {
-    itemsEl.innerHTML = `<div class="cart-empty"><div class="cart-empty-icon">🛒</div><div style="font-weight:600;color:var(--text-dark);margin-bottom:6px">Your cart is empty</div><div style="font-size:13px">Add some nutritious goodies!</div></div>`;
-    footerEl.style.display = 'none';
+function generateQR(){
+  const text=qrInput.value.trim();
+  if(!text){
+    qrInput.classList.add("shake");qrInput.style.borderColor="#ff6b35";qrInput.focus();
+    setTimeout(()=>{qrInput.classList.remove("shake");qrInput.style.borderColor="";},600);
     return;
   }
-  itemsEl.innerHTML = Object.values(cart).map(item => `
-    <div class="cart-item">
-      <div class="cart-item-img">${item.emoji}</div>
-      <div style="flex:1">
-        <div class="cart-item-name">${item.name}</div>
-        <div class="cart-item-price">₹${item.price}</div>
-        <div class="cart-qty">
-          <button class="qty-btn" onclick="changeQty(${item.id}, -1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
-        </div>
-      </div>
-    </div>
-  `).join('');
-  document.getElementById('cartTotal').textContent = '₹' + total;
-  footerEl.style.display = 'block';
+  lastText=text;
+  const size=parseInt(sizeSlider.value),fg=fgPicker.value,bg=bgPicker.value,ec=ecLevel.value;
+  genBtn.disabled=true;genBtn.textContent="⟳ Generating…";
+  try{
+    renderQR(text,size,fg,bg,ec);
+    qrInfo.textContent=`"${text.length>55?text.slice(0,55)+"…":text}"`;
+    emptyState.style.display="none";qrCard.classList.add("show");
+    setTimeout(()=>qrCard.scrollIntoView({behavior:"smooth",block:"nearest"}),100);
+  }catch(err){console.error(err);alert("Could not generate QR. Try shorter text or lower error correction.");}
+  genBtn.disabled=false;genBtn.textContent="⬡ Generate QR Code";
 }
 
-function changeQty(id, delta) {
-  if (!cart[id]) return;
-  cart[id].qty += delta;
-  if (cart[id].qty <= 0) delete cart[id];
-  updateCartUI();
+function renderQR(text,size,fg,bg,ec){
+  const tmp=document.createElement("div");
+  tmp.style.cssText="position:fixed;left:-9999px;top:0;visibility:hidden;";
+  document.body.appendChild(tmp);
+  new QRCode(tmp,{text,width:size,height:size,colorDark:fg,colorLight:bg,correctLevel:QRCode.CorrectLevel[ec]});
+  const ctx=qrCanvas.getContext("2d");
+  qrCanvas.width=size;qrCanvas.height=size;
+  const gen=tmp.querySelector("canvas")||tmp.querySelector("img");
+  if(!gen){document.body.removeChild(tmp);throw new Error("No output");}
+  const draw=()=>{ctx.clearRect(0,0,size,size);ctx.drawImage(gen,0,0,size,size);document.body.removeChild(tmp);};
+  if(gen.tagName==="CANVAS"||gen.complete)draw();
+  else{gen.onload=draw;gen.onerror=()=>{document.body.removeChild(tmp);throw new Error("Load failed");};}
 }
 
-function toggleCart() {
-  document.getElementById('cartDrawer').classList.toggle('open');
-  document.getElementById('cartOverlay').classList.toggle('open');
-}
-
-// ── SLIDER ──
-let currentSlide = 0;
-const slides = document.querySelectorAll('.slide');
-const dotsEl = document.getElementById('sliderDots');
-
-slides.forEach((_, i) => {
-  const d = document.createElement('button');
-  d.className = 'dot' + (i === 0 ? ' active' : '');
-  d.onclick = () => goToSlide(i);
-  dotsEl.appendChild(d);
+dlPng.addEventListener("click",()=>{
+  const a=document.createElement("a");a.download=`qr-${fn(lastText)}.png`;a.href=qrCanvas.toDataURL("image/png");a.click();
 });
-
-function goToSlide(n) {
-  slides[currentSlide].classList.remove('active');
-  dotsEl.children[currentSlide].classList.remove('active');
-  currentSlide = (n + slides.length) % slides.length;
-  slides[currentSlide].classList.add('active');
-  dotsEl.children[currentSlide].classList.add('active');
-}
-
-function changeSlide(dir) { goToSlide(currentSlide + dir); }
-
-setInterval(() => changeSlide(1), 5000);
-
-// ── SEARCH ──
-function openSearch() {
-  document.getElementById('searchOverlay').classList.add('open');
-  setTimeout(() => document.getElementById('searchInput').focus(), 300);
-}
-function closeSearch(e) {
-  if (e.target === document.getElementById('searchOverlay'))
-    document.getElementById('searchOverlay').classList.remove('open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.getElementById('searchOverlay').classList.remove('open');
+dlSvg.addEventListener("click",()=>{
+  const d=qrCanvas.toDataURL("image/png"),s=qrCanvas.width;
+  const svg=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">\n  <image href="${d}" width="${s}" height="${s}"/>\n</svg>`;
+  const blob=new Blob([svg],{type:"image/svg+xml"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.download=`qr-${fn(lastText)}.svg`;a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
 });
-
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ── NEWSLETTER ──
-function subscribeNewsletter() {
-  const val = document.getElementById('emailInput').value.trim();
-  if (!val || !val.includes('@')) { showToast('⚠️ Please enter a valid email'); return; }
-  showToast('🎉 Subscribed! Check your inbox for 10% off');
-  document.getElementById('emailInput').value = '';
-}
-
-// ── HEADER SCROLL ──
-window.addEventListener('scroll', () => {
-  document.getElementById('header').classList.toggle('scrolled', window.scrollY > 20);
+cpImg.addEventListener("click",async()=>{
+  if(!navigator.clipboard?.write){fb(cpImg,"✗ Not supported","fail");return;}
+  try{
+    await new Promise((res,rej)=>{qrCanvas.toBlob(async blob=>{try{await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);res();}catch(e){rej(e);}});});
+    fb(cpImg,"✓ Copied!","ok");
+  }catch{fb(cpImg,"✗ Failed","fail");}
 });
-
-// Init
-renderProducts();
+shareBtn.addEventListener("click",async()=>{
+  if(!navigator.share){fb(shareBtn,"✗ Not supported","fail");return;}
+  try{
+    await new Promise((res,rej)=>{qrCanvas.toBlob(async blob=>{try{const file=new File([blob],`qr-${fn(lastText)}.png`,{type:"image/png"});await navigator.share({title:"QR Code",text:`QR code for: ${lastText}`,files:[file]});res();}catch(e){rej(e);}});});
+  }catch{fb(shareBtn,"✗ Cancelled","fail");}
+});
+function fb(btn,msg,cls){const o=btn.textContent;btn.textContent=msg;btn.classList.add(cls);setTimeout(()=>{btn.textContent=o;btn.classList.remove(cls);},2000);}
+function fn(str){return(str||"qrcode").replace(/[^a-zA-Z0-9_-]/g,"_").slice(0,40);}
 </script>
 </body>
 </html>
