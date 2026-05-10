@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>QR Forge — QR Code Generator</title>
-<meta name="description" content="Generate QR codes instantly from any text, name, URL or data. Free, open source."/>
+<title>QR Forge ×10 — Batch QR Code Generator</title>
+<meta name="description" content="Generate up to 10 QR codes instantly. Free, open source."/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Archivo+Black&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -17,60 +17,62 @@ body{
   font-family:'Space Mono',monospace;
   background:var(--bg);color:var(--text);
   min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:24px 16px;position:relative;overflow-x:hidden;
+  align-items:center;justify-content:flex-start;
+  padding:32px 16px;position:relative;overflow-x:hidden;
 }
 body::before{
   content:"";position:fixed;inset:0;
   background-image:linear-gradient(rgba(0,255,136,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,0.03) 1px,transparent 1px);
   background-size:40px 40px;pointer-events:none;z-index:0;
 }
-.wrap{position:relative;z-index:1;width:100%;max-width:480px;display:flex;flex-direction:column;gap:20px;}
-.header{text-align:center;}
+.wrap{position:relative;z-index:1;width:100%;max-width:680px;display:flex;flex-direction:column;gap:20px;}
+.header{text-align:center;padding:8px 0 4px;}
 .title{
   font-family:'Archivo Black',sans-serif;
   font-size:clamp(2rem,7vw,3rem);letter-spacing:-1px;
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;
 }
-.sub{font-size:0.68rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
+.sub{font-size:0.62rem;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-top:8px;}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:14px;}
-.field{display:flex;flex-direction:column;gap:6px;}
-.lbl{font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);}
+.lbl{font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.inputs-grid{display:flex;flex-direction:column;gap:6px;}
+.input-row{display:flex;align-items:center;gap:8px;}
+.row-num{font-size:0.65rem;color:var(--muted);min-width:20px;text-align:right;flex-shrink:0;}
 .inp{
   background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:12px 14px;color:var(--text);font-family:'Space Mono',monospace;
-  font-size:0.88rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
+  padding:10px 13px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.82rem;outline:none;transition:border-color 0.2s,box-shadow 0.2s;width:100%;
 }
 .inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,255,136,0.1);}
 .inp::placeholder{color:var(--muted);}
-.inp.shake{animation:shake 0.3s ease;}
-@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.options-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+.field{display:flex;flex-direction:column;gap:5px;}
 .color-wrap{
-  display:flex;align-items:center;gap:10px;
+  display:flex;align-items:center;gap:9px;
   background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:9px 12px;cursor:pointer;transition:border-color 0.2s;
+  padding:8px 11px;cursor:pointer;transition:border-color 0.2s;
 }
 .color-wrap:hover{border-color:var(--accent);}
-.swatch{width:26px;height:26px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.12);flex-shrink:0;transition:transform 0.2s;}
+.swatch{width:24px;height:24px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.12);flex-shrink:0;transition:transform 0.2s;}
 .color-wrap:hover .swatch{transform:scale(1.1);}
 input[type="color"]{position:absolute;opacity:0;width:0;height:0;pointer-events:none;}
-.hex-val{font-size:0.72rem;color:var(--muted);letter-spacing:1px;}
+.hex-val{font-size:0.7rem;color:var(--muted);letter-spacing:1px;}
 .sel{
   background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-  padding:11px 36px 11px 12px;color:var(--text);font-family:'Space Mono',monospace;
-  font-size:0.78rem;outline:none;cursor:pointer;width:100%;appearance:none;
+  padding:10px 30px 10px 11px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.75rem;outline:none;cursor:pointer;appearance:none;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;background-size:16px;
+  background-repeat:no-repeat;background-position:right 8px center;background-size:14px;
   transition:border-color 0.2s;
 }
 .sel:focus{border-color:var(--accent);}
-.size-row{display:flex;align-items:center;gap:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;}
-.size-num{font-size:0.75rem;color:var(--accent);min-width:36px;text-align:right;font-weight:700;}
-input[type="range"]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:99px;outline:none;cursor:pointer;}
-input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--accent);cursor:pointer;transition:transform 0.2s;}
+.size-field{display:flex;flex-direction:column;gap:5px;}
+.size-row{display:flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;}
+input[type="range"]{flex:1;-webkit-appearance:none;height:3px;background:var(--border);border-radius:99px;outline:none;cursor:pointer;min-width:80px;}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--accent);cursor:pointer;transition:transform 0.2s;}
 input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3);}
+.size-num{font-size:0.7rem;color:var(--accent);font-weight:700;min-width:34px;text-align:right;}
 .gen-btn{
   background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#000;border:none;border-radius:8px;padding:14px;
@@ -80,48 +82,58 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3);}
 .gen-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,255,136,0.3);}
 .gen-btn:active{transform:translateY(0);}
 .gen-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none;}
-.qr-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-  padding:24px 20px;display:none;flex-direction:column;align-items:center;gap:16px;
-  animation:fadeUp 0.4s ease;
+.results{display:none;flex-direction:column;gap:14px;}
+.results.show{display:flex;}
+.results-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.results-title{font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
+.dl-all-btn{
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  padding:8px 14px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.65rem;cursor:pointer;transition:border-color 0.2s,color 0.2s;
 }
-.qr-card.show{display:flex;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-.qr-tag{font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);}
-#qrCanvas{border-radius:10px;display:block;max-width:100%;height:auto;image-rendering:pixelated;}
-.qr-info{font-size:0.7rem;color:var(--muted);text-align:center;word-break:break-all;max-width:340px;line-height:1.7;}
-.action-row{display:flex;gap:8px;width:100%;flex-wrap:wrap;}
-.act-btn{
-  flex:1;min-width:90px;background:var(--surface2);border:1px solid var(--border);
-  border-radius:8px;padding:10px 8px;color:var(--text);
-  font-family:'Space Mono',monospace;font-size:0.68rem;cursor:pointer;
-  transition:all 0.2s;white-space:nowrap;
+.dl-all-btn:hover{border-color:var(--accent);color:var(--accent);}
+.dl-all-btn:disabled{opacity:0.5;cursor:not-allowed;}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+.qr-item{
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  padding:14px;display:flex;flex-direction:column;align-items:center;gap:9px;
+  animation:fadeUp 0.35s ease;
 }
-.act-btn:hover{border-color:var(--accent);color:var(--accent);}
-.act-btn.ok{border-color:var(--accent);color:var(--accent);}
-.act-btn.fail{border-color:#ff6b35;color:#ff6b35;}
-.empty{text-align:center;padding:28px 0 4px;color:var(--muted);font-size:0.75rem;line-height:2;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.empty-icon{font-size:2.8rem;opacity:0.2;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.qr-item canvas{border-radius:7px;max-width:100%;height:auto;image-rendering:pixelated;display:block;}
+.qr-num{font-size:0.58rem;color:var(--accent);letter-spacing:2px;text-transform:uppercase;}
+.qr-label{font-size:0.62rem;color:var(--muted);text-align:center;word-break:break-all;line-height:1.6;max-width:170px;}
+.qr-dl{
+  background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;color:var(--text);font-family:'Space Mono',monospace;
+  font-size:0.62rem;cursor:pointer;transition:border-color 0.2s,color 0.2s;width:100%;
+}
+.qr-dl:hover{border-color:var(--accent);color:var(--accent);}
+.empty-hint{text-align:center;padding:20px 0 4px;color:var(--muted);font-size:0.72rem;line-height:2;}
 .footer{text-align:center;font-size:0.6rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;opacity:0.4;}
 .footer a{color:var(--muted);text-decoration:none;}
 .footer a:hover{color:var(--accent);}
-@media(max-width:400px){.two-col{grid-template-columns:1fr;}.action-row{flex-direction:column;}.act-btn{min-width:unset;}}
+@media(max-width:480px){
+  .options-row{flex-direction:column;}
+  .qr-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <div class="header">
-    <div class="title">QR FORGE</div>
-    <div class="sub">instant qr code generator</div>
+    <div class="title">QR FORGE ×10</div>
+    <div class="sub">batch qr code generator — up to 10 at once</div>
   </div>
 
   <div class="card">
-    <div class="field">
-      <div class="lbl">Text / Name / URL / Anything</div>
-      <input class="inp" id="qrInput" type="text" placeholder="e.g. John Doe, https://github.com, Wi-Fi…" autocomplete="off" spellcheck="false"/>
+    <div>
+      <div class="lbl">Enter up to 10 links / texts (one per row)</div>
+      <div class="inputs-grid" id="inputsGrid"></div>
     </div>
-    <div class="two-col">
+
+    <div class="options-row">
       <div class="field">
         <div class="lbl">QR Color</div>
         <div class="color-wrap" id="fgWrap">
@@ -138,8 +150,6 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3);}
           <input type="color" id="bgPicker" value="#0a0a0a"/>
         </div>
       </div>
-    </div>
-    <div class="two-col">
       <div class="field">
         <div class="lbl">Error Correction</div>
         <select class="sel" id="ecLevel">
@@ -149,116 +159,223 @@ input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.3);}
           <option value="H">H — 30%</option>
         </select>
       </div>
-      <div class="field">
-        <div class="lbl">Size — <span id="sizeDisp">280</span>px</div>
+      <div class="size-field">
+        <div class="lbl">Size — <span id="sizeDisp">220</span>px</div>
         <div class="size-row">
-          <input type="range" id="sizeSlider" min="150" max="600" value="280" step="10"/>
-          <span class="size-num" id="sizeNum">280</span>
+          <input type="range" id="sizeSlider" min="120" max="500" value="220" step="10"/>
+          <span class="size-num" id="sizeNum">220</span>
         </div>
       </div>
     </div>
-    <button class="gen-btn" id="genBtn">⬡ Generate QR Code</button>
+
+    <button class="gen-btn" id="genBtn">⬡ Generate All QR Codes</button>
   </div>
 
-  <div class="qr-card" id="qrCard">
-    <div class="qr-tag">▸ your qr code</div>
-    <canvas id="qrCanvas"></canvas>
-    <div class="qr-info" id="qrInfo"></div>
-    <div class="action-row">
-      <button class="act-btn" id="dlPng">⬇ PNG</button>
-      <button class="act-btn" id="dlSvg">⬇ SVG</button>
-      <button class="act-btn" id="cpImg">⎘ Copy</button>
-      <button class="act-btn" id="shareBtn">↗ Share</button>
+  <div class="results" id="results">
+    <div class="results-header">
+      <div class="results-title" id="resultsTitle">▸ your qr codes</div>
+      <button class="dl-all-btn" id="dlAllBtn">⬇ Download All as ZIP</button>
     </div>
+    <div class="qr-grid" id="qrGrid"></div>
   </div>
 
-  <div class="empty" id="emptyState">
-    <div class="empty-icon">▦</div>
-    <div>Enter any text above and tap Generate<br/>to create your QR code instantly</div>
-  </div>
+  <div class="empty-hint" id="emptyHint">Fill in at least one field above and tap Generate</div>
 
-  <div class="footer">qr forge &nbsp;·&nbsp; open source &nbsp;·&nbsp; <a href="https://github.com" target="_blank" rel="noopener">github</a></div>
+  <div class="footer">qr forge ×10 &nbsp;·&nbsp; open source &nbsp;·&nbsp; <a href="https://github.com" target="_blank" rel="noopener">github</a></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 "use strict";
-const qrInput=document.getElementById("qrInput"),genBtn=document.getElementById("genBtn"),qrCard=document.getElementById("qrCard"),qrCanvas=document.getElementById("qrCanvas"),qrInfo=document.getElementById("qrInfo"),emptyState=document.getElementById("emptyState");
-const fgPicker=document.getElementById("fgPicker"),bgPicker=document.getElementById("bgPicker"),fgSwatch=document.getElementById("fgSwatch"),bgSwatch=document.getElementById("bgSwatch"),fgHex=document.getElementById("fgHex"),bgHex=document.getElementById("bgHex");
-const fgWrap=document.getElementById("fgWrap"),bgWrap=document.getElementById("bgWrap"),ecLevel=document.getElementById("ecLevel"),sizeSlider=document.getElementById("sizeSlider"),sizeDisp=document.getElementById("sizeDisp"),sizeNum=document.getElementById("sizeNum");
-const dlPng=document.getElementById("dlPng"),dlSvg=document.getElementById("dlSvg"),cpImg=document.getElementById("cpImg"),shareBtn=document.getElementById("shareBtn");
-let lastText="";
 
-function syncColor(w){
-  const p=w==="fg"?fgPicker:bgPicker,s=w==="fg"?fgSwatch:bgSwatch,h=w==="fg"?fgHex:bgHex;
-  s.style.background=p.value;h.textContent=p.value.toUpperCase();
+/* ── Build 10 input rows ── */
+const N = 10;
+const inputsGrid = document.getElementById("inputsGrid");
+for (let i = 0; i < N; i++) {
+  const row = document.createElement("div");
+  row.className = "input-row";
+  row.innerHTML = `
+    <span class="row-num">${i + 1}</span>
+    <input class="inp qr-inp" type="text"
+      placeholder="${i === 0 ? "e.g. https://example.com, John Doe, Wi-Fi…" : "optional"}"
+      autocomplete="off" spellcheck="false"/>`;
+  inputsGrid.appendChild(row);
 }
-syncColor("fg");syncColor("bg");
-fgWrap.addEventListener("click",()=>fgPicker.click());
-bgWrap.addEventListener("click",()=>bgPicker.click());
-fgPicker.addEventListener("input",()=>syncColor("fg"));
-bgPicker.addEventListener("input",()=>syncColor("bg"));
-sizeSlider.addEventListener("input",()=>{sizeDisp.textContent=sizeSlider.value;sizeNum.textContent=sizeSlider.value;});
-qrInput.addEventListener("keydown",e=>{if(e.key==="Enter")generateQR();});
-genBtn.addEventListener("click",generateQR);
 
-function generateQR(){
-  const text=qrInput.value.trim();
-  if(!text){
-    qrInput.classList.add("shake");qrInput.style.borderColor="#ff6b35";qrInput.focus();
-    setTimeout(()=>{qrInput.classList.remove("shake");qrInput.style.borderColor="";},600);
+/* ── Element refs ── */
+const fgPicker   = document.getElementById("fgPicker");
+const bgPicker   = document.getElementById("bgPicker");
+const fgSwatch   = document.getElementById("fgSwatch");
+const bgSwatch   = document.getElementById("bgSwatch");
+const fgHex      = document.getElementById("fgHex");
+const bgHex      = document.getElementById("bgHex");
+const fgWrap     = document.getElementById("fgWrap");
+const bgWrap     = document.getElementById("bgWrap");
+const ecLevel    = document.getElementById("ecLevel");
+const sizeSlider = document.getElementById("sizeSlider");
+const sizeDisp   = document.getElementById("sizeDisp");
+const sizeNum    = document.getElementById("sizeNum");
+const genBtn     = document.getElementById("genBtn");
+const results    = document.getElementById("results");
+const qrGrid     = document.getElementById("qrGrid");
+const resultsTitle = document.getElementById("resultsTitle");
+const dlAllBtn   = document.getElementById("dlAllBtn");
+const emptyHint  = document.getElementById("emptyHint");
+
+let generatedCanvases = [];
+
+/* ── Color pickers ── */
+function syncColor(w) {
+  const p = w === "fg" ? fgPicker : bgPicker;
+  const s = w === "fg" ? fgSwatch : bgSwatch;
+  const h = w === "fg" ? fgHex    : bgHex;
+  s.style.background = p.value;
+  h.textContent = p.value.toUpperCase();
+}
+syncColor("fg"); syncColor("bg");
+fgWrap.addEventListener("click", () => fgPicker.click());
+bgWrap.addEventListener("click", () => bgPicker.click());
+fgPicker.addEventListener("input", () => syncColor("fg"));
+bgPicker.addEventListener("input", () => syncColor("bg"));
+
+/* ── Size slider ── */
+sizeSlider.addEventListener("input", () => {
+  sizeDisp.textContent = sizeSlider.value;
+  sizeNum.textContent  = sizeSlider.value;
+});
+
+/* ── Enter key on any input triggers generate ── */
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter") generateAll();
+});
+
+/* ── Render one QR code to a canvas ── */
+function renderQRToCanvas(text, size, fg, bg, ec) {
+  return new Promise((resolve, reject) => {
+    const tmp = document.createElement("div");
+    tmp.style.cssText = "position:fixed;left:-9999px;top:0;visibility:hidden;";
+    document.body.appendChild(tmp);
+    try {
+      new QRCode(tmp, {
+        text, width: size, height: size,
+        colorDark: fg, colorLight: bg,
+        correctLevel: QRCode.CorrectLevel[ec]
+      });
+    } catch(e) {
+      document.body.removeChild(tmp);
+      reject(e); return;
+    }
+    const gen = tmp.querySelector("canvas") || tmp.querySelector("img");
+    if (!gen) { document.body.removeChild(tmp); reject(new Error("No output")); return; }
+    const canvas = document.createElement("canvas");
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext("2d");
+    const draw = () => {
+      ctx.clearRect(0, 0, size, size);
+      ctx.drawImage(gen, 0, 0, size, size);
+      document.body.removeChild(tmp);
+      resolve(canvas);
+    };
+    if (gen.tagName === "CANVAS" || gen.complete) draw();
+    else { gen.onload = draw; gen.onerror = () => { document.body.removeChild(tmp); reject(new Error("Load failed")); }; }
+  });
+}
+
+/* ── Generate all ── */
+genBtn.addEventListener("click", generateAll);
+
+async function generateAll() {
+  const inputs = [...document.querySelectorAll(".qr-inp")];
+  const texts  = inputs.map(i => i.value.trim()).filter(Boolean);
+
+  if (texts.length === 0) {
+    inputs[0].style.borderColor = "#ff6b35";
+    inputs[0].focus();
+    setTimeout(() => { inputs[0].style.borderColor = ""; }, 600);
     return;
   }
-  lastText=text;
-  const size=parseInt(sizeSlider.value),fg=fgPicker.value,bg=bgPicker.value,ec=ecLevel.value;
-  genBtn.disabled=true;genBtn.textContent="⟳ Generating…";
-  try{
-    renderQR(text,size,fg,bg,ec);
-    qrInfo.textContent=`"${text.length>55?text.slice(0,55)+"…":text}"`;
-    emptyState.style.display="none";qrCard.classList.add("show");
-    setTimeout(()=>qrCard.scrollIntoView({behavior:"smooth",block:"nearest"}),100);
-  }catch(err){console.error(err);alert("Could not generate QR. Try shorter text or lower error correction.");}
-  genBtn.disabled=false;genBtn.textContent="⬡ Generate QR Code";
+
+  const size = parseInt(sizeSlider.value);
+  const fg   = fgPicker.value;
+  const bg   = bgPicker.value;
+  const ec   = ecLevel.value;
+
+  genBtn.disabled = true;
+  genBtn.textContent = `⟳ Generating ${texts.length} QR code${texts.length > 1 ? "s" : ""}…`;
+  qrGrid.innerHTML = "";
+  generatedCanvases = [];
+  results.classList.remove("show");
+
+  try {
+    for (let i = 0; i < texts.length; i++) {
+      const canvas = await renderQRToCanvas(texts[i], size, fg, bg, ec);
+      generatedCanvases.push({ canvas, text: texts[i] });
+
+      /* Build card */
+      const item  = document.createElement("div");  item.className  = "qr-item";
+      const num   = document.createElement("div");  num.className   = "qr-num";   num.textContent = `#${i + 1}`;
+      const lbl   = document.createElement("div");  lbl.className   = "qr-label";
+      lbl.textContent = texts[i].length > 42 ? texts[i].slice(0, 42) + "…" : texts[i];
+      const dlBtn = document.createElement("button"); dlBtn.className = "qr-dl"; dlBtn.textContent = "⬇ Download PNG";
+
+      const idx = i;
+      dlBtn.addEventListener("click", () => {
+        const a = document.createElement("a");
+        a.download = `qr-${idx + 1}-${fn(texts[idx])}.png`;
+        a.href = generatedCanvases[idx].canvas.toDataURL("image/png");
+        a.click();
+      });
+
+      item.appendChild(num);
+      item.appendChild(canvas);
+      item.appendChild(lbl);
+      item.appendChild(dlBtn);
+      qrGrid.appendChild(item);
+    }
+
+    resultsTitle.textContent = `▸ ${texts.length} qr code${texts.length > 1 ? "s" : ""} generated`;
+    emptyHint.style.display  = "none";
+    results.classList.add("show");
+    setTimeout(() => results.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+
+  } catch(err) {
+    console.error(err);
+    alert("Failed to generate one or more QR codes. Try shorter text or lower error correction.");
+  }
+
+  genBtn.disabled    = false;
+  genBtn.textContent = "⬡ Generate All QR Codes";
 }
 
-function renderQR(text,size,fg,bg,ec){
-  const tmp=document.createElement("div");
-  tmp.style.cssText="position:fixed;left:-9999px;top:0;visibility:hidden;";
-  document.body.appendChild(tmp);
-  new QRCode(tmp,{text,width:size,height:size,colorDark:fg,colorLight:bg,correctLevel:QRCode.CorrectLevel[ec]});
-  const ctx=qrCanvas.getContext("2d");
-  qrCanvas.width=size;qrCanvas.height=size;
-  const gen=tmp.querySelector("canvas")||tmp.querySelector("img");
-  if(!gen){document.body.removeChild(tmp);throw new Error("No output");}
-  const draw=()=>{ctx.clearRect(0,0,size,size);ctx.drawImage(gen,0,0,size,size);document.body.removeChild(tmp);};
-  if(gen.tagName==="CANVAS"||gen.complete)draw();
-  else{gen.onload=draw;gen.onerror=()=>{document.body.removeChild(tmp);throw new Error("Load failed");};}
-}
+/* ── Download all as ZIP ── */
+dlAllBtn.addEventListener("click", async () => {
+  if (!generatedCanvases.length) return;
+  dlAllBtn.textContent = "⟳ Zipping…";
+  dlAllBtn.disabled    = true;
+  try {
+    const zip = new JSZip();
+    for (let i = 0; i < generatedCanvases.length; i++) {
+      const { canvas, text } = generatedCanvases[i];
+      const base64 = canvas.toDataURL("image/png").split(",")[1];
+      zip.file(`qr-${i + 1}-${fn(text)}.png`, base64, { base64: true });
+    }
+    const blob = await zip.generateAsync({ type: "blob" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href = url; a.download = "qr-codes.zip"; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch(e) {
+    alert("ZIP download failed. Try downloading individually.");
+  }
+  dlAllBtn.textContent = "⬇ Download All as ZIP";
+  dlAllBtn.disabled    = false;
+});
 
-dlPng.addEventListener("click",()=>{
-  const a=document.createElement("a");a.download=`qr-${fn(lastText)}.png`;a.href=qrCanvas.toDataURL("image/png");a.click();
-});
-dlSvg.addEventListener("click",()=>{
-  const d=qrCanvas.toDataURL("image/png"),s=qrCanvas.width;
-  const svg=`<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${s}" height="${s}" viewBox="0 0 ${s} ${s}">\n  <image href="${d}" width="${s}" height="${s}"/>\n</svg>`;
-  const blob=new Blob([svg],{type:"image/svg+xml"}),url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.download=`qr-${fn(lastText)}.svg`;a.href=url;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);
-});
-cpImg.addEventListener("click",async()=>{
-  if(!navigator.clipboard?.write){fb(cpImg,"✗ Not supported","fail");return;}
-  try{
-    await new Promise((res,rej)=>{qrCanvas.toBlob(async blob=>{try{await navigator.clipboard.write([new ClipboardItem({"image/png":blob})]);res();}catch(e){rej(e);}});});
-    fb(cpImg,"✓ Copied!","ok");
-  }catch{fb(cpImg,"✗ Failed","fail");}
-});
-shareBtn.addEventListener("click",async()=>{
-  if(!navigator.share){fb(shareBtn,"✗ Not supported","fail");return;}
-  try{
-    await new Promise((res,rej)=>{qrCanvas.toBlob(async blob=>{try{const file=new File([blob],`qr-${fn(lastText)}.png`,{type:"image/png"});await navigator.share({title:"QR Code",text:`QR code for: ${lastText}`,files:[file]});res();}catch(e){rej(e);}});});
-  }catch{fb(shareBtn,"✗ Cancelled","fail");}
-});
-function fb(btn,msg,cls){const o=btn.textContent;btn.textContent=msg;btn.classList.add(cls);setTimeout(()=>{btn.textContent=o;btn.classList.remove(cls);},2000);}
-function fn(str){return(str||"qrcode").replace(/[^a-zA-Z0-9_-]/g,"_").slice(0,40);}
+/* ── Helpers ── */
+function fn(str) {
+  return (str || "qr").replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 30);
+}
 </script>
 </body>
 </html>
